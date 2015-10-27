@@ -16,4 +16,11 @@
         android:layout_width="match_parent"
         android:text="Save new"
         android:id="@+id/new_button"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/listView"
+        android:layout_gravity="center_horizontal" />
+
 </LinearLayout>
