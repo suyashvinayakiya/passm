@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         //fix issue
         // blank record created evertime app is opened
         else {
-            Bundle extras = getIntent().getExtras();
+            Bundle extras = getIntent().getExtras();  //fix issue
             db.insertItem (extras.getString("name"), extras.getString("pass"));
         }
         list = db.getAllItems();
