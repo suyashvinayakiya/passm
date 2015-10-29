@@ -19,7 +19,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    static ArrayList<Password> list;
+
 
 
     @Override
@@ -29,25 +29,26 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        DatabaseHelper db = new DatabaseHelper(this, 1);
+        ArrayList<Password> list;
 
-        //needs to be fixed
-        // is being created everytime activity is screated
-        // should only instantiate the first time
-        list = new ArrayList<Password>();
-        list.add (new Password("Facebook", "abc"));
-        list.add (new Password("Twitter", "def"));
 
         if (getIntent().getExtras() == null) {
             Log.d("msg", "extras are null");
 
         }
+        //fix issue
+        // blank record created evertime app is opened
         else {
             Bundle extras = getIntent().getExtras();
-            list.add (new Password(extras.getString("name"), extras.getString("pass")));
+            db.insertItem (extras.getString("name"), extras.getString("pass"));
+        }
+        list = db.getAllItems();
+
+        if (savedInstanceState == null){
+
         }
 
-
-        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        */
+
 
         Button newButton = (Button) findViewById(R.id.new_button);
         newButton.setOnClickListener(new View.OnClickListener() {
