@@ -49,6 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     Password getItem(String name){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("select * from passwords where name="+name+"", null);
+        cursor.close();
         return (new Password(cursor.getString(0), cursor.getString(1)));
     }
 
@@ -78,6 +79,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             list.add (new Password(cursor.getString(0), cursor.getString(1)));
             cursor.moveToNext();
         }
+        cursor.close();
         return list;
 
     }

@@ -1,5 +1,6 @@
 package com.securepass.utk.securepass;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -7,11 +8,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -29,12 +32,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DatabaseHelper db = new DatabaseHelper(this, 1);
+        final DatabaseHelper db = new DatabaseHelper(this, 1);
         ArrayList<Password> list;
 
 
         if (getIntent().getExtras() == null) {
-            Log.d("msg", "extras are null");
+            Log.e("msg", "extras are null");
 
         }
         //fix issue
@@ -63,8 +66,33 @@ public class MainActivity extends AppCompatActivity {
         newButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), NewPass.class);
-                startActivity(intent);
+                final Dialog dialog = new Dialog(MainActivity.this);
+                dialog.setContentView(R.layout.new_pass_layout);
+                dialog.setTitle("New Password");
+                Log.e("MainActivity", "title set");
+
+
+
+                Button saveButton = (Button) dialog.findViewById(R.id.save_button);
+                saveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        EditText nameEditText = (EditText) dialog.findViewById(R.id.name_editText);
+                        EditText passEditText = (EditText) dialog.findViewById(R.id.pass_editText);
+                        db.insertItem(nameEditText.getText().toString(), passEditText.getText().toString());
+                        dialog.dismiss();
+                    }
+                });
+                Button cancelButton = (Button) dialog.findViewById(R.id.cancel_button);
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                Log.e("MainActivity", "on clicks set");
+
+                dialog.show();
             }
         });
 
