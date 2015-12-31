@@ -37,12 +37,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public void deleteAllItems(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_NAME);
+    }
+
     public boolean insertItem (String name, String pass){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(NAMES_KEY, name);
         contentValues.put(PASS_KEY, pass);
         db.insert(TABLE_NAME, null, contentValues);
+        Log.e("DatabaseHelper", "Contact added: " + name + pass);
         return true;
     }
 
@@ -75,8 +81,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("select * from passwords", null);
         cursor.moveToFirst();
         while (cursor.isAfterLast() == false){
-            Log.e("got contact", "got contact");
+
             list.add (new Password(cursor.getString(0), cursor.getString(1)));
+            Log.e("Contact", cursor.getString(0) + cursor.getString(1));
             cursor.moveToNext();
         }
         cursor.close();

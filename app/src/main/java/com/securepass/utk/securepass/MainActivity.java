@@ -35,17 +35,17 @@ public class MainActivity extends AppCompatActivity {
         final DatabaseHelper db = new DatabaseHelper(this, 1);
         ArrayList<Password> list;
 
-
-        if (getIntent().getExtras() == null) {
-            Log.e("msg", "extras are null");
-
-        }
-        //fix issue
-        // blank record created evertime app is opened
-        else {
-            Bundle extras = getIntent().getExtras();  //fix issue
-            db.insertItem (extras.getString("name"), extras.getString("pass"));
-        }
+//
+//        if (getIntent().getExtras() == null) {
+//            Log.e("msg", "extras are null");
+//
+//        }
+//        //fix issue
+//        // blank record created evertime app is opened
+//        else {
+//            Bundle extras = getIntent().getExtras();  //fix issue
+//            db.insertItem (extras.getString("name"), extras.getString("pass"));
+//        }
         list = db.getAllItems();
 
         if (savedInstanceState == null){
@@ -61,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ListView listView = (ListView) findViewById(R.id.listView);
+        final ItemArrayAdapter listAdapter = new ItemArrayAdapter(this,
+                R.layout.item_view, list);
+        listView.setAdapter(listAdapter);
+
 
         Button newButton = (Button) findViewById(R.id.new_button);
         newButton.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("MainActivity", "title set");
 
 
-
                 Button saveButton = (Button) dialog.findViewById(R.id.save_button);
                 saveButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -80,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                         EditText nameEditText = (EditText) dialog.findViewById(R.id.name_editText);
                         EditText passEditText = (EditText) dialog.findViewById(R.id.pass_editText);
                         db.insertItem(nameEditText.getText().toString(), passEditText.getText().toString());
+                        listAdapter.notifyDataSetChanged();
                         dialog.dismiss();
                     }
                 });
@@ -95,11 +100,14 @@ public class MainActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
+        Button deleteAllButton = (Button) findViewById(R.id.delete_all);
+        deleteAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.deleteAllItems();
+            }
+        });
 
-        ListView listView = (ListView) findViewById(R.id.listView);
-        ItemArrayAdapter listAdapter = new ItemArrayAdapter(this,
-                R.layout.item_view, list);
-        listView.setAdapter(listAdapter);
     }
 
     @Override

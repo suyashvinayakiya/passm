@@ -17,6 +17,12 @@
         android:text="Save new"
         android:id="@+id/new_button"/>
 
+    <Button android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="Delete All"
+        android:id="@+id/delete_all"/>
+
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="fill_parent"

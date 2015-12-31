@@ -1,6 +1,7 @@
 package com.securepass.utk.securepass;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,12 @@ public class ItemArrayAdapter extends ArrayAdapter <Password> {
 
     }
     */
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        Log.e("ItemArrayAdapter", "Data change notified");
+    }
 
     public ItemArrayAdapter(Context context, int resource, ArrayList<Password> list) {
         super(context, resource, list);
