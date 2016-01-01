@@ -12,10 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +26,12 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
 
-    ArrayList<Password> list;
+    private ArrayList<Password> list;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e("MainActivity", "main activity started");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -38,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.listView);
         final ItemArrayAdapter listAdapter = new ItemArrayAdapter(this,
-                R.layout.item_view, list);
+                R.layout.item_view, list, db);
         listView.setAdapter(listAdapter);
 
 
@@ -85,6 +90,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+//        ImageButton optionsButton = (ImageButton) listView.findViewById(R.id.options_button);
+//        optionsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getApplicationContext(), "button clicked", Toast.LENGTH_LONG).show();
+//            }
+//        });
+
     }
 
     @Override
@@ -108,5 +122,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 
 }

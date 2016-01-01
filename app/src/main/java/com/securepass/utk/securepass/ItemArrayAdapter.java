@@ -1,11 +1,19 @@
 package com.securepass.utk.securepass;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -16,7 +24,9 @@ import java.util.HashMap;
  */
 public class ItemArrayAdapter extends ArrayAdapter <Password> {
 
-    ArrayList<Password> list;
+
+    private ArrayList<Password> list;
+    private DatabaseHelper db;
 
     /*
     public ItemArrayAdapter(Context context, int textViewResourseId, ArrayList <Password> list) {
@@ -26,15 +36,11 @@ public class ItemArrayAdapter extends ArrayAdapter <Password> {
     }
     */
 
-    @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
-        Log.e("ItemArrayAdapter", "Data change notified");
-    }
 
-    public ItemArrayAdapter(Context context, int resource, ArrayList<Password> list) {
+    public ItemArrayAdapter(Context context, int resource, ArrayList<Password> list, DatabaseHelper db) {
         super(context, resource, list);
         this.list = list;
+        this.db = db;
     }
 
     @Override
@@ -58,7 +64,55 @@ public class ItemArrayAdapter extends ArrayAdapter <Password> {
 
         }
 
+        ImageButton optionsButton = (ImageButton) v.findViewById(R.id.options_button);
+        optionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final int index;
+                View parentRow = (View) v.getParent();
+                ListView listView = (ListView) parentRow.getParent();
+                index = listView.getPositionForView(parentRow);
+
+                final PopupMenu popup = new PopupMenu(getContext(), v);
+                popup.getMenuInflater().inflate(R.menu.menu_options, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+
+                            case R.id.edit_option:
+                                final Dialog dialog = new Dialog(getContext());
+                                dialog.setContentView(R.layout.new_pass_layout);
+
+
+                                dialog.show();
+
+                                return true;
+                            case R.id.delete_option:
+                                db.deleteItem(getItem(index).getName());
+                                remove(getItem(index));
+                                popup.dismiss();
+                                notifyDataSetChanged();
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+
+                popup.show();
+            }
+        });
+
+
         return v;
+    }
+
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        Log.e("ItemArrayAdapter", "Data change notified");
     }
 
 }
