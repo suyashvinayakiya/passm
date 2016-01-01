@@ -40,6 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void deleteAllItems(){
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL("DELETE FROM " + TABLE_NAME);
+        db.close();
     }
 
     public boolean insertItem (String name, String pass){
@@ -48,7 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(NAMES_KEY, name);
         contentValues.put(PASS_KEY, pass);
         db.insert(TABLE_NAME, null, contentValues);
-        Log.e("DatabaseHelper", "Contact added: " + name + pass);
+        db.close();
         return true;
     }
 
@@ -56,6 +57,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("select * from passwords where name="+name+"", null);
         cursor.close();
+        db.close();
         return (new Password(cursor.getString(0), cursor.getString(1)));
     }
 
@@ -65,12 +67,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(NAMES_KEY, name);
         contentValues.put(PASS_KEY, pass);
         db.update (TABLE_NAME, contentValues, "name = ? ", new String[] {name});
+        db.close();
         return true;
     }
 
     public void deleteItem (String name){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_NAME, "name = ? ", new String[]{name});
+        db.close();
 
     }
 
@@ -83,10 +87,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         while (cursor.isAfterLast() == false){
 
             list.add (new Password(cursor.getString(0), cursor.getString(1)));
-            Log.e("Contact", cursor.getString(0) + cursor.getString(1));
             cursor.moveToNext();
         }
         cursor.close();
+        db.close();
         return list;
 
     }

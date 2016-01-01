@@ -23,7 +23,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
 
-
+    ArrayList<Password> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,33 +33,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final DatabaseHelper db = new DatabaseHelper(this, 1);
-        ArrayList<Password> list;
 
-//
-//        if (getIntent().getExtras() == null) {
-//            Log.e("msg", "extras are null");
-//
-//        }
-//        //fix issue
-//        // blank record created evertime app is opened
-//        else {
-//            Bundle extras = getIntent().getExtras();  //fix issue
-//            db.insertItem (extras.getString("name"), extras.getString("pass"));
-//        }
         list = db.getAllItems();
-
-        if (savedInstanceState == null){
-
-        }
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         ListView listView = (ListView) findViewById(R.id.listView);
         final ItemArrayAdapter listAdapter = new ItemArrayAdapter(this,
@@ -84,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                         EditText nameEditText = (EditText) dialog.findViewById(R.id.name_editText);
                         EditText passEditText = (EditText) dialog.findViewById(R.id.pass_editText);
                         db.insertItem(nameEditText.getText().toString(), passEditText.getText().toString());
-                        listAdapter.notifyDataSetChanged();
+                        list.add(new Password(nameEditText.getText().toString(), passEditText.getText().toString()));
                         dialog.dismiss();
                     }
                 });
@@ -105,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 db.deleteAllItems();
+                list.clear();
+                listAdapter.notifyDataSetChanged();
             }
         });
 
@@ -131,4 +108,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
