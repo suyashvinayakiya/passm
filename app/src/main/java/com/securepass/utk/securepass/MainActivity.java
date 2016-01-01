@@ -1,7 +1,10 @@
 package com.securepass.utk.securepass;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -27,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private ArrayList<Password> list;
-
+    private DatabaseHelper db;
+    private ItemArrayAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +40,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final DatabaseHelper db = new DatabaseHelper(this, 1);
+        db = new DatabaseHelper(this, 1);
 
         list = db.getAllItems();
 
         ListView listView = (ListView) findViewById(R.id.listView);
-        final ItemArrayAdapter listAdapter = new ItemArrayAdapter(this,
+        listAdapter = new ItemArrayAdapter(this,
                 R.layout.item_view, list, db);
         listView.setAdapter(listAdapter);
 
@@ -76,15 +80,6 @@ public class MainActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
-        Button deleteAllButton = (Button) findViewById(R.id.delete_all);
-        deleteAllButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db.deleteAllItems();
-                list.clear();
-                listAdapter.notifyDataSetChanged();
-            }
-        });
     db.close();
     }
 
@@ -102,12 +97,46 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        if (id == R.id.action_destroySelf) {
 
-        return super.onOptionsItemSelected(item);
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+            builder.setMessage("This will clear all passwords and lead you to uninstall the app. Are you Sure?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+
+                    db.deleteAllItems();
+                    list.clear();
+                    listAdapter.notifyDataSetChanged();
+                    Toast.makeText(getApplicationContext(), "It was a pleasure helping you manage passwords. Goodbye, dear user.", Toast.LENGTH_LONG).show();
+
+                    Uri packageURI = Uri.parse("package:" + getApplication().getPackageName());
+                    Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI);
+                    startActivity(uninstallIntent);
+                }
+            });
+
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener()
+
+                    {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                            Toast.makeText(getApplicationContext(), "Knew you wouldn't let me go!", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+            );
+
+                AlertDialog dialog = builder.create();
+
+                dialog.show();
+
+
+                return true;
+            }
+
+            return super.onOptionsItemSelected(item);
     }
 
 
