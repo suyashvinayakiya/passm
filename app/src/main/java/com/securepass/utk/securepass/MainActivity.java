@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.e("MainActivity", "main activity started");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -54,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
                 final Dialog dialog = new Dialog(MainActivity.this);
                 dialog.setContentView(R.layout.new_pass_layout);
                 dialog.setTitle("New Password");
-                Log.e("MainActivity", "title set");
-
 
                 Button saveButton = (Button) dialog.findViewById(R.id.save_button);
                 saveButton.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 });
-                Log.e("MainActivity", "on clicks set");
 
                 dialog.show();
             }
@@ -89,16 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 listAdapter.notifyDataSetChanged();
             }
         });
-
-
-//        ImageButton optionsButton = (ImageButton) listView.findViewById(R.id.options_button);
-//        optionsButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(getApplicationContext(), "button clicked", Toast.LENGTH_LONG).show();
-//            }
-//        });
-
+    db.close();
     }
 
     @Override

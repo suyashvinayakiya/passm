@@ -61,15 +61,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return (new Password(cursor.getString(0), cursor.getString(1)));
     }
 
-    boolean updateItem (String name, String pass){
+    boolean updateItem (String originalName, String name, String pass){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(NAMES_KEY, name);
         contentValues.put(PASS_KEY, pass);
-        db.update (TABLE_NAME, contentValues, "name = ? ", new String[] {name});
+        db.update(TABLE_NAME, contentValues, "name = ? ", new String[]{originalName});
         db.close();
         return true;
     }
+
+
 
     public void deleteItem (String name){
         SQLiteDatabase db = this.getWritableDatabase();

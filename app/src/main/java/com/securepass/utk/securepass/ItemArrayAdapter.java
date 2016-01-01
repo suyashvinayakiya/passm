@@ -28,14 +28,6 @@ public class ItemArrayAdapter extends ArrayAdapter <Password> {
     private ArrayList<Password> list;
     private DatabaseHelper db;
 
-    /*
-    public ItemArrayAdapter(Context context, int textViewResourseId, ArrayList <Password> list) {
-        super(context, textViewResourseId, list);
-        this.list = list;
-
-    }
-    */
-
 
     public ItemArrayAdapter(Context context, int resource, ArrayList<Password> list, DatabaseHelper db) {
         super(context, resource, list);
@@ -45,7 +37,6 @@ public class ItemArrayAdapter extends ArrayAdapter <Password> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        //super.getView(position, convertView, parent);
 
         View v = convertView;
 
@@ -83,7 +74,32 @@ public class ItemArrayAdapter extends ArrayAdapter <Password> {
                             case R.id.edit_option:
                                 final Dialog dialog = new Dialog(getContext());
                                 dialog.setContentView(R.layout.new_pass_layout);
+                                dialog.setTitle("Edit Password");
+                                final EditText nameEditText = (EditText) dialog.findViewById(R.id.name_editText);
+                                final EditText passEditText = (EditText) dialog.findViewById(R.id.pass_editText);
+                                nameEditText.setText(list.get(index).getName());
+                                passEditText.setText(list.get(index).getPass());
 
+                                Button saveButton = (Button) dialog.findViewById(R.id.save_button);
+                                saveButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        db.updateItem(list.get(index).getName(), nameEditText.getText().toString(), passEditText.getText().toString());
+                                        Password password = getItem(index);
+                                        password.setName(nameEditText.getText().toString());
+                                        password.setPass(passEditText.getText().toString());
+                                        notifyDataSetChanged();
+                                        dialog.dismiss();
+                                    }
+                                });
+                                Button cancelButton = (Button) dialog.findViewById(R.id.cancel_button);
+                                cancelButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+                                    }
+                                });
+;                               popup.dismiss();
 
                                 dialog.show();
 
@@ -112,7 +128,6 @@ public class ItemArrayAdapter extends ArrayAdapter <Password> {
     @Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
-        Log.e("ItemArrayAdapter", "Data change notified");
     }
 
 }
