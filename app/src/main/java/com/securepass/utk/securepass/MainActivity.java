@@ -64,9 +64,14 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         EditText nameEditText = (EditText) dialog.findViewById(R.id.name_editText);
                         EditText passEditText = (EditText) dialog.findViewById(R.id.pass_editText);
-                        db.insertItem(nameEditText.getText().toString(), passEditText.getText().toString());
-                        list.add(new Password(nameEditText.getText().toString(), passEditText.getText().toString()));
-                        dialog.dismiss();
+                        if (nameEditText.getText().toString().equals("") || passEditText.getText().toString().equals("")) {
+                            Log.e("Main Activity", "Empty fields");
+                            Toast.makeText(getApplicationContext(), "Please fill both fields to save a new password.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            db.insertItem(nameEditText.getText().toString(), passEditText.getText().toString());
+                            list.add(new Password(nameEditText.getText().toString(), passEditText.getText().toString()));
+                            dialog.dismiss();
+                        }
                     }
                 });
                 Button cancelButton = (Button) dialog.findViewById(R.id.cancel_button);

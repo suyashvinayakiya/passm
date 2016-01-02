@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,12 +85,16 @@ public class ItemArrayAdapter extends ArrayAdapter <Password> {
                                 saveButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        db.updateItem(list.get(index).getName(), nameEditText.getText().toString(), passEditText.getText().toString());
-                                        Password password = getItem(index);
-                                        password.setName(nameEditText.getText().toString());
-                                        password.setPass(passEditText.getText().toString());
-                                        notifyDataSetChanged();
-                                        dialog.dismiss();
+                                        if (nameEditText.getText().toString().equals("") || passEditText.getText().toString().equals("")) {
+                                            Toast.makeText(getContext(), "Please fill both fields to save changes.", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            db.updateItem(list.get(index).getName(), nameEditText.getText().toString(), passEditText.getText().toString());
+                                            Password password = getItem(index);
+                                            password.setName(nameEditText.getText().toString());
+                                            password.setPass(passEditText.getText().toString());
+                                            notifyDataSetChanged();
+                                            dialog.dismiss();
+                                        }
                                     }
                                 });
                                 Button cancelButton = (Button) dialog.findViewById(R.id.cancel_button);
@@ -99,7 +104,8 @@ public class ItemArrayAdapter extends ArrayAdapter <Password> {
                                         dialog.dismiss();
                                     }
                                 });
-;                               popup.dismiss();
+                                ;
+                                popup.dismiss();
 
                                 dialog.show();
 
