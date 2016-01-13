@@ -58,7 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("select * from passwords where name="+name+"", null);
         cursor.close();
         db.close();
-        return (new Password(cursor.getString(0), cursor.getString(1)));
+        return (new Password(cursor.getString(0), Security.decrypt(cursor.getString(1))));
     }
 
     boolean updateItem (String originalName, String name, String pass){
@@ -87,8 +87,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("select * from passwords", null);
         cursor.moveToFirst();
         while (cursor.isAfterLast() == false){
-
-            list.add (new Password(cursor.getString(0), cursor.getString(1)));
+            list.add (new Password(cursor.getString(0), Security.decrypt(cursor.getString(1))));
             cursor.moveToNext();
         }
         cursor.close();

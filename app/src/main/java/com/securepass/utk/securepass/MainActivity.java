@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         list = db.getAllItems();
 
+
         ListView listView = (ListView) findViewById(R.id.listView);
         listAdapter = new ItemArrayAdapter(this,
                 R.layout.item_view, list, db);
