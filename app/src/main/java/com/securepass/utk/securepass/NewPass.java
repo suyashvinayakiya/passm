@@ -11,6 +11,11 @@ import android.widget.Toast;
 /**
  * Created by utk on 15-10-16.
  */
+
+/* Activity not being used
+Changed to dialog box
+ */
+
 public class NewPass extends Activity {
 
     @Override

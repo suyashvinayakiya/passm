@@ -68,7 +68,10 @@ public class MainActivity extends AppCompatActivity {
                             Log.e("Main Activity", "Empty fields");
                             Toast.makeText(getApplicationContext(), "Please fill both fields to save a new password.", Toast.LENGTH_SHORT).show();
                         } else {
-                            db.insertItem(nameEditText.getText().toString(), passEditText.getText().toString());
+                            String encryptedPass = Security.encrypt(passEditText.getText().toString());
+                            Log.e("MainActivity", encryptedPass);
+                            db.insertItem(nameEditText.getText().toString(), encryptedPass);
+
                             list.add(new Password(nameEditText.getText().toString(), passEditText.getText().toString()));
                             dialog.dismiss();
                         }
